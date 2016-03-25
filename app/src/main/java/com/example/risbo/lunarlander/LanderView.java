@@ -24,15 +24,27 @@ public class LanderView extends GCanvas {
 
     @Override
     public void init() {
-        Bitmap rocketImage = BitmapFactory.decodeResource(
-                getResources(), R.drawable.rocket1
-        );
-        rocket = new GSprite(rocketImage,50,10);
+
+        rocket = new GSprite(loadScaleBitmap(R.drawable.rocket1,2),50,10);
         rocket.setVelocityY(5);
+        rocket.setAccelerationY(0.25f);
         add(rocket);
 
         animate(30);
 
+    }
+
+
+    private Bitmap loadScaleBitmap(int id, int factor) {
+        Bitmap image = BitmapFactory.decodeResource(
+                getResources(), id
+        );
+
+        image = Bitmap.createScaledBitmap(image,
+                image.getWidth() / factor,
+                image.getHeight() / factor,
+                true);
+        return image;
     }
 
     @Override
