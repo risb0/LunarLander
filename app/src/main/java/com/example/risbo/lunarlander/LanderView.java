@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import stanford.androidlib.graphics.GCanvas;
@@ -22,7 +23,6 @@ import stanford.androidlib.util.RandomGenerator;
 public class LanderView extends GCanvas {
     private static final float MAX_SAFE_LANDING_VELOCITY = 7.0f;
 
-
     private GSprite rocket;
     private GSprite moonSurface;
     private GLabel points;
@@ -32,6 +32,9 @@ public class LanderView extends GCanvas {
     private ArrayList<GSprite> asteroids = new ArrayList<>();
     private int frames = 0;
     private int count = 0;
+    private int pointsLen = 1;
+    private int prevPointsLen = 1;
+    private String rocketVelocity = "";
 
     public LanderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -75,9 +78,9 @@ public class LanderView extends GCanvas {
 
         // create the Labels
         points = new GLabel(String.valueOf(count));
-        points.setFont(Typeface.MONOSPACE, Typeface.BOLD, 400f);
+        points.setFont(Typeface.MONOSPACE, Typeface.BOLD, 100f);
         points.setColor(GColor.WHITE);
-        points.setRightX(getWidth() - points.getFontSize());
+        points.setRightX(getWidth() - points.getText().length() * points.getFontSize());
         add(points);
 
         velocityLabel = new GLabel("Velocity: 0 / " + MAX_SAFE_LANDING_VELOCITY);
@@ -87,11 +90,11 @@ public class LanderView extends GCanvas {
         add(velocityLabel);
 
         endMessageLabel = new GLabel("");
-        endMessageLabel.setLocation(10,points.getFontSize());
+        endMessageLabel.setLocation(10, points.getFontSize());
         endMessageLabel.setFont(Typeface.MONOSPACE, Typeface.BOLD, 50 * getResources().getDisplayMetrics().density);
 
 
-        animate(30);
+        animate(30); // 30 frames per second
 
     }
 
@@ -114,7 +117,9 @@ public class LanderView extends GCanvas {
     public void onAnimateTick() {
         super.onAnimateTick();
 
-        velocityLabel.setText("Velocity: " + rocket.getVelocityY() + " / " + MAX_SAFE_LANDING_VELOCITY);
+        rocketVelocity = new DecimalFormat("#.##").format(rocket.getVelocityY());
+        String MAX_SAFE_LANDING_VELOCITY_Str = new DecimalFormat("#.##").format(MAX_SAFE_LANDING_VELOCITY);
+        updateLabels(MAX_SAFE_LANDING_VELOCITY_Str);
 
         frames++;
         if(frames % 60 == 0){
@@ -158,12 +163,12 @@ public class LanderView extends GCanvas {
         if(rocket.collidesWith(moonSurface)){
 
             if (rocket.getVelocityY() <= MAX_SAFE_LANDING_VELOCITY){
-                endMessageLabel.setText("YOU WIN!");
+                endMessageLabel.setText(R.string.you_win);
                 endMessageLabel.setColor(GColor.GREEN);
                 add(endMessageLabel);
 
             } else{
-                endMessageLabel.setText("You lose.");
+                endMessageLabel.setText(R.string.you_lose);
                 endMessageLabel.setColor(GColor.RED);
                 add(endMessageLabel);
 
@@ -176,7 +181,7 @@ public class LanderView extends GCanvas {
         for (GSprite asteroid: asteroids){ //for each asteroid generated in the collection, check if it collides with the rocket
                 if (rocket.collidesWith(asteroid)){
                     //all stops, game over
-                    endMessageLabel.setText("You lose.");
+                    endMessageLabel.setText(R.string.you_lose);
                     endMessageLabel.setColor(GColor.RED);
                     add(endMessageLabel);
                     animationStop();
@@ -186,16 +191,29 @@ public class LanderView extends GCanvas {
 
 
     private void countUp() {
+
+
         for(GSprite asteroid : asteroids){
 
-
+             prevPointsLen = pointsLen;
 
             if ( asteroid.getX() < 50 && asteroid.getX() > 0 && asteroid.getY() < getWidth() && asteroid.getY() > 0){
                 count++;
 
             }
+            String scoreStr = getResources().getString(
+                    R.string.score, count
+            );
 
-            points.setLabel(String.valueOf(count));
+            points.setLabel(scoreStr);
+            pointsLen =  points.getText().length();
+
+
+            if (pointsLen != prevPointsLen){
+                points.setRightX(getWidth() - points.getText().length());
+                add(points);
+
+            }
 
 //            Log.v("count", "count = " + count);
 //            Log.v("count", "asteroid Y = " + asteroid.getY());
@@ -240,6 +258,15 @@ public class LanderView extends GCanvas {
 
 
     }
+
+
+    public void updateLabels(String MAX_SAFE_LANDING_VELOCITY_Str) {
+
+        String velocityStr = getResources().getString(R.string.velocity, rocketVelocity, MAX_SAFE_LANDING_VELOCITY_Str);
+        velocityLabel.setText(velocityStr);
+
+    }
+
 
     public void stopGame() {
         animationStop();

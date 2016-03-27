@@ -23,7 +23,7 @@
             android:layout_marginRight="10dp"
             android:id="@+id/playbutton"
             android:onClick="playClick"
-            android:text="PLAY"
+            android:text="@string/play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -32,7 +32,7 @@
             android:layout_marginLeft="10dp"
             android:id="@+id/stopbutton"
             android:onClick="stopClick"
-            android:text="STOP"
+            android:text="@string/stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
