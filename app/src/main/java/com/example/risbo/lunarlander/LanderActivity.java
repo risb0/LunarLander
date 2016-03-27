@@ -11,18 +11,19 @@ public class LanderActivity extends SimpleActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_faceview);
     }
 
-  /*  public void playClick(View view){
-        final LanderView faceView = new LanderView(this,);
+    public void playClick(View view){
+        final LanderView faceView = find(R.id.myLanderview);
         faceView.startGame();
     }
 
     public void stopClick(View view){
-        final LanderView faceView = ...;
+        final LanderView faceView = find(R.id.myLanderview);
         faceView.stopGame();
-    }*/
+    }
 
 }
  

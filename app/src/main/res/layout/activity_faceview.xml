@@ -4,8 +4,41 @@
     android:layout_height="match_parent">
 
     <com.example.risbo.lunarlander.LanderView
+        android:id="@+id/myLanderview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         />
+
+    <LinearLayout
+        android:gravity="bottom|center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+
+        >
+
+        <Button
+            android:layout_marginRight="10dp"
+            android:id="@+id/playbutton"
+            android:onClick="playClick"
+            android:text="PLAY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <Button
+            android:layout_marginLeft="10dp"
+            android:id="@+id/stopbutton"
+            android:onClick="stopClick"
+            android:text="STOP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+
+    </LinearLayout>
 
 </LinearLayout>
