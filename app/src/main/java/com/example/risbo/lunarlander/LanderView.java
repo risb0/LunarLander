@@ -26,6 +26,8 @@ public class LanderView extends GCanvas {
     private GSprite rocket;
     private GSprite moonSurface;
     private GLabel points;
+    private GLabel velocityLabel;
+    private GLabel endMessageLabel;
     // create an ArrayList for all the asteroids that have been generated
     private ArrayList<GSprite> asteroids = new ArrayList<>();
     private int frames = 0;
@@ -71,11 +73,23 @@ public class LanderView extends GCanvas {
         rocket.setCollisionMargin(150);
         add(rocket);
 
-
-        points = new GLabel(String.valueOf(count), 750, 10);
-        points.setFont(Typeface.MONOSPACE, Typeface.BOLD,400f);
+        // create the Labels
+        points = new GLabel(String.valueOf(count));
+        points.setFont(Typeface.MONOSPACE, Typeface.BOLD, 400f);
         points.setColor(GColor.WHITE);
+        points.setRightX(getWidth() - points.getFontSize());
         add(points);
+
+        velocityLabel = new GLabel("Velocity: 0 / " + MAX_SAFE_LANDING_VELOCITY);
+        velocityLabel.setFont(Typeface.MONOSPACE, Typeface.BOLD, 60);
+        velocityLabel.setColor(GColor.WHITE);
+        velocityLabel.setLocation(10, 10);
+        add(velocityLabel);
+
+        endMessageLabel = new GLabel("");
+        endMessageLabel.setLocation(10,points.getFontSize());
+        endMessageLabel.setFont(Typeface.MONOSPACE, Typeface.BOLD, 50 * getResources().getDisplayMetrics().density);
+
 
         animate(30);
 
@@ -99,6 +113,8 @@ public class LanderView extends GCanvas {
     @Override
     public void onAnimateTick() {
         super.onAnimateTick();
+
+        velocityLabel.setText("Velocity: " + rocket.getVelocityY() + " / " + MAX_SAFE_LANDING_VELOCITY);
 
         frames++;
         if(frames % 60 == 0){
@@ -140,12 +156,29 @@ public class LanderView extends GCanvas {
     private void doCollisions(){
 
         if(rocket.collidesWith(moonSurface)){
+
+            if (rocket.getVelocityY() <= MAX_SAFE_LANDING_VELOCITY){
+                endMessageLabel.setText("YOU WIN!");
+                endMessageLabel.setColor(GColor.GREEN);
+                add(endMessageLabel);
+
+            } else{
+                endMessageLabel.setText("You lose.");
+                endMessageLabel.setColor(GColor.RED);
+                add(endMessageLabel);
+
+            }
             rocket.stop(); //stop moving the sprite
+            animationStop();
+
         }
 
         for (GSprite asteroid: asteroids){ //for each asteroid generated in the collection, check if it collides with the rocket
                 if (rocket.collidesWith(asteroid)){
                     //all stops, game over
+                    endMessageLabel.setText("You lose.");
+                    endMessageLabel.setColor(GColor.RED);
+                    add(endMessageLabel);
                     animationStop();
                 }
             }
@@ -154,6 +187,8 @@ public class LanderView extends GCanvas {
 
     private void countUp() {
         for(GSprite asteroid : asteroids){
+
+
 
             if ( asteroid.getX() < 50 && asteroid.getX() > 0 && asteroid.getY() < getWidth() && asteroid.getY() > 0){
                 count++;
@@ -198,6 +233,8 @@ public class LanderView extends GCanvas {
         rocket.setVelocityY(5);
         rocket.setAccelerationY(0);
         count = 0;
+        endMessageLabel.setText("");
+
         animate(30);
 
 
