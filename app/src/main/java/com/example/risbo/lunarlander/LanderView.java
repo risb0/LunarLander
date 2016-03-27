@@ -78,7 +78,7 @@ public class LanderView extends GCanvas {
 
         // create the Labels
         points = new GLabel(String.valueOf(count));
-        points.setFont(Typeface.MONOSPACE, Typeface.BOLD, 100f);
+        points.setFont(Typeface.MONOSPACE, Typeface.BOLD, 80f);
         points.setColor(GColor.WHITE);
         points.setRightX(getWidth() - points.getText().length() * points.getFontSize());
         add(points);
@@ -118,11 +118,10 @@ public class LanderView extends GCanvas {
         super.onAnimateTick();
 
         rocketVelocity = new DecimalFormat("#.##").format(rocket.getVelocityY());
-        String MAX_SAFE_LANDING_VELOCITY_Str = new DecimalFormat("#.##").format(MAX_SAFE_LANDING_VELOCITY);
-        updateLabels(MAX_SAFE_LANDING_VELOCITY_Str);
+        updateLabels();
 
         frames++;
-        if(frames % 60 == 0){
+        if(frames % 30 == 0){
             // add an asteroid every 60 frames
             GSprite asteroid = new GSprite(loadScaleBitmap(R.drawable.asteroid,2));
             asteroid.setRightX(getWidth());
@@ -136,7 +135,7 @@ public class LanderView extends GCanvas {
             Log.v("moon", "screen height " + ( getHeight()));*/
 
             asteroid.setY(y);
-            asteroid.setVelocityX(-9);
+            asteroid.setVelocityX(-15);
 
             asteroid.setCollisionMargin(10);
             add(asteroid);
@@ -249,7 +248,7 @@ public class LanderView extends GCanvas {
         }
         asteroids.clear();
         rocket.setVelocityY(5);
-        rocket.setAccelerationY(0);
+        rocket.setAccelerationY(.25f);
         count = 0;
         endMessageLabel.setText("");
 
@@ -260,9 +259,9 @@ public class LanderView extends GCanvas {
     }
 
 
-    public void updateLabels(String MAX_SAFE_LANDING_VELOCITY_Str) {
+    public void updateLabels() {
 
-        String velocityStr = getResources().getString(R.string.velocity, rocketVelocity, MAX_SAFE_LANDING_VELOCITY_Str);
+        String velocityStr = getResources().getString(R.string.velocity, rocketVelocity, MAX_SAFE_LANDING_VELOCITY);
         velocityLabel.setText(velocityStr);
 
     }

@@ -5,7 +5,7 @@
     <string name="stop">Arrêter</string>
     <string name="you_win">GAGNE!</string>
     <string name="you_lose">Perdu.</string>
-    <string name="score">Astéroïdes évitées: %1$d</string>
+    <string name="score">Astéroïdes évités: %1$d</string>
     <string name="velocity">Vitesse: %1$s / %2$s</string>
 
 </resources>
